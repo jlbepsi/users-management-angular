@@ -1,0 +1,54 @@
+table {
+  width: 90%;
+}
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+.toolbar-filter {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  margin: 12px;
+  width: 90%;
+}
+
+div.toolbar {
+  padding-left: 12px;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  height: 48px;
+}
+
+i {
+  display: none;
+}
+
+/*tr:hover i {
+  display: block;
+}*/
+tr:hover i {
+  display: flex;
+  position: absolute;
+  transform: translate(-100%, -50%);
+  transition: width 150ms ease-in-out;
+  overflow: hidden;
+  /* Par dessus la ligne */
+  z-index: 2;
+
+  /* Background flou */
+  backdrop-filter: blur(0.9px);
+}
+
+/*
+Column width
+*/
+.mat-column-action {
+  width: 1px;
+}
+

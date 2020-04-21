@@ -1,0 +1,30 @@
+
+.loading {
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+
+.user-form {
+  min-width: 150px;
+  max-width: 750px;
+  width: 100%;
+}
+
+.user-full-width {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td {
+  padding-left: 12px;
+}
+
+/*
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948;
+}
+
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442;
+}*/

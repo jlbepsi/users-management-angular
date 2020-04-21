@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Modifier l'option BTS</h2>
+
+<mat-dialog-content class="mat-typography">
+    <div>
+        <mat-slide-toggle class="user-full-width"
+                          [color]="'primary'"
+                          [(ngModel)]="data.bts"
+        >
+            BTS
+        </mat-slide-toggle>
+    </div>
+    <div>
+        <mat-form-field class="user-full-width">
+            <mat-select
+                    placeholder="Option du BTS" id="btsParcours"
+                    [(ngModel)]="data.parcours"
+                    [disabled]="data.bts===false"
+            >
+                <mat-option value="IND">Indifferencié</mat-option>
+                <mat-option value="SLAM">SLAM</mat-option>
+                <mat-option value="SISR">SISR</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close cdkFocusInitial>Annuler</button>
+    <button mat-raised-button color="warn" [mat-dialog-close]="data" >Valider</button>
+</mat-dialog-actions>
+

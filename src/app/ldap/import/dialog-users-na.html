@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Basculer tous les utilisateurs en NA</h2>
+<mat-dialog-content class="mat-typography">
+  Attention: cette action basculera tous les utilisateurs dans la classe NA.<br>
+  Cette action est <b>irreversible</b> !
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close cdkFocusInitial>Annuler</button>
+  <button mat-raised-button color="warn" [mat-dialog-close]="true" >Oui</button>
+</mat-dialog-actions>
+

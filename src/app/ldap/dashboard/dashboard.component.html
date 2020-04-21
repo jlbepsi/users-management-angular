@@ -1,0 +1,77 @@
+<app-navbar>
+  <div class="total-users-card" >
+    <mat-grid-list cols="2">
+      <mat-grid-tile>
+        <mat-icon class="icon-display">people</mat-icon>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <div class="item-right">
+          <p class="mat-card-title">{{ usersTotal }}</p>
+          <p class="mat-card-subtitle">Total étudiants</p>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+
+  <br /><br />
+
+  <mat-card class="chart-card">
+    <mat-card-header>
+      <mat-card-title>Répartition par classe</mat-card-title>
+      <mat-card-subtitle>subtitle</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <canvas baseChart
+              [datasets]="barChartDataUsers"
+              [labels]="barChartLabelsUsers"
+              [options]="barChartOptions"
+              [plugins]="[]"
+              [legend]="true"
+              [chartType]="'bar'">
+      </canvas>
+    </mat-card-content>
+  </mat-card>
+
+  <br /><br />
+
+  <mat-card class="chart-card">
+    <mat-card-header>
+      <mat-card-title>BTS SIO</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <canvas baseChart
+              [datasets]="barChartDataBts"
+              [labels]="barChartLabelsBts"
+              [options]="barChartOptions"
+              [plugins]="[]"
+              [legend]="true"
+              [chartType]="'bar'">
+      </canvas>
+    </mat-card-content>
+  </mat-card>
+</app-navbar>
+
+  <!--
+
+  <div class="chart-inline">
+    <span><h3>B1</h3></span>
+    <canvas baseChart
+            [data]="pieChartDataBts1"
+            [labels]="pieChartLabelsBts"
+            [options]="barChartOptions"
+            [plugins]="[]"
+            [legend]="true"
+            [chartType]="'pie'">
+    </canvas>
+
+    <span><h3>B2</h3></span>
+    <canvas baseChart
+            [data]="pieChartDataBts2"
+            [labels]="pieChartLabelsBts"
+            [options]="barChartOptions"
+            [plugins]="[]"
+            [legend]="true"
+            [chartType]="'pie'">
+    </canvas>
+  </div>
+  -->

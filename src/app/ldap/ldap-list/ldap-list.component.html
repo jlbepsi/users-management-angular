@@ -1,0 +1,170 @@
+<app-navbar>
+  <div class="mat-elevation-z8">
+
+    <button mat-raised-button color="primary"
+            (click)="addUser()">
+      Ajouter un utilsateur
+    </button> <br /><br />
+
+    <div *ngIf="errorMessage.length>0">
+      <app-alert [type]="'danger'">{{ errorMessage }}</app-alert>
+      <br />
+    </div>
+
+    <div class="toolbar-filter">
+      <mat-form-field>
+        <mat-label>Classe</mat-label>
+
+        <mat-select [value]="classeSelected"  (selectionChange)="classeChanged($event)">
+          <mat-option value="">Toutes</mat-option>
+          <mat-option *ngFor="let classe of classes" value="{{ classe }}">{{ classe }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      &nbsp;&nbsp;
+      <mat-form-field>
+        <mat-label>Nom complet</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium">
+      </mat-form-field>
+      &nbsp;&nbsp;
+      <mat-slide-toggle [checked]="btsSelected" (change)="btsChanged($event)">
+        BTS Uniquement
+      </mat-slide-toggle>
+    </div>
+
+    <div class="toolbar">
+      <div *ngIf="! selection.hasValue()" >
+
+        <button mat-icon-button matTooltip="Recharger" color="primary"
+                (click)="reload()">
+          <mat-icon aria-label="Recharger">refresh</mat-icon>
+        </button>
+
+      </div>
+      <div *ngIf="selection.hasValue()" >
+        <button mat-icon-button matTooltip="Modifier l'option BTS" color="primary"
+                (click)="modifyBTSOptionAll()">
+          <mat-icon aria-label="">school</mat-icon>
+        </button>
+
+        <button mat-icon-button matTooltip="Désactiver" color="primary"
+                (click)="deactivateAll()">
+          <mat-icon aria-label="Delete">lock</mat-icon>
+        </button>
+
+        <button mat-icon-button matTooltip="Activer" color="primary"
+                (click)="activateAll()">
+          <mat-icon aria-label="Account">lock_open</mat-icon>
+        </button>
+
+        <button mat-icon-button matTooltip="Supprimer définitivement" color="warn"
+                (click)="deleteAll()">
+          <mat-icon aria-label="Delete">delete_forever</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <table
+      mat-table [dataSource]="dataSource"
+      matSort matSortActive="classe" matSortDirection="asc"
+    >
+
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox
+            (change)="$event ? masterToggle() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+            [aria-label]="checkboxLabel()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox
+            (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)"
+            [aria-label]="checkboxLabel(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Actif Column -->
+      <ng-container matColumnDef="active">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header > Actif </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-icon *ngIf="element.active === false" aria-label="Desactiver" color="warn">lock</mat-icon>
+          <mat-icon *ngIf="element.active === true" aria-label="Activer">lock_open</mat-icon>
+        </td>
+      </ng-container>
+
+      <!-- Classe Column -->
+      <ng-container matColumnDef="classe">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header > Classe </th>
+        <td mat-cell *matCellDef="let element"> {{element.classe}} </td>
+      </ng-container>
+
+      <!-- Nom complet Column -->
+      <ng-container matColumnDef="nomComplet" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header > Nom complet </th>
+        <td mat-cell *matCellDef="let element"> {{element.nomComplet}} </td>
+      </ng-container>
+
+      <!-- Mail Column -->
+      <ng-container matColumnDef="mail">
+        <th mat-header-cell *matHeaderCellDef> Mail </th>
+        <td mat-cell *matCellDef="let element"> {{element.mail}} </td>
+      </ng-container>
+
+      <!-- BTS Column -->
+      <ng-container matColumnDef="bts">
+        <th mat-header-cell *matHeaderCellDef> BTS </th>
+        <td mat-cell *matCellDef="let element"> {{element.bts ? element.btsParcours : '-'}} </td>
+      </ng-container>
+
+      <!-- Action Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>  </th>
+        <td mat-cell *matCellDef="let element">
+          <i>
+            <button mat-icon-button matTooltip="Editer" color="primary"
+                    (click)="edit(element.login)"
+            >
+              <mat-icon aria-label="Editer">edit</mat-icon>
+            </button>
+
+            <button mat-icon-button matTooltip="Modifier le mot de passe" color="primary"
+                    (click)="modifyPassword(element.nomComplet, element.login)">
+              <mat-icon aria-label="">perm_identity</mat-icon>
+            </button>
+
+            <button *ngIf="element.active === true" mat-icon-button matTooltip="Désactiver" color="primary"
+                    (click)="deactivate(element.login)"
+            >
+              <mat-icon aria-label="Desactiver">lock</mat-icon>
+            </button>
+
+            <button *ngIf="element.active === false" mat-icon-button matTooltip="Activer" color="primary"
+                    (click)="activate(element.login)"
+            >
+              <mat-icon aria-label="Activer">lock_open</mat-icon>
+            </button>
+
+            <button mat-icon-button matTooltip="Supprimer définitivement" color="warn"
+                    (click)="deleteForEver(element.login)"
+            >
+              <mat-icon aria-label="Supprimer">delete_forever</mat-icon>
+            </button>
+          </i>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator
+      [pageSizeOptions]="[25, 50]"
+      showFirstLastButtons>
+
+    </mat-paginator>
+  </div>
+</app-navbar>

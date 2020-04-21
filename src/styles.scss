@@ -1,0 +1,39 @@
+/* You can add global styles to this file, and also import other style files */
+
+/*
+deeppurple-amber.css
+indigo-pink.css
+pink-bluegrey.css
+purple-green.css
+ */
+
+
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+/*
+  CSS pour les snackbar de l'application
+ */
+snack-bar-container.snackbarColorSuccess {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+snack-bar-container.snackbarColorWarning {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+snack-bar-container.snackbarColorInfo {
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+}
+snack-bar-container.snackbarColorDanger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
