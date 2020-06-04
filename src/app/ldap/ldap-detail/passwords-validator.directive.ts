@@ -1,9 +1,6 @@
 import {FormControl, FormGroup, FormGroupDirective, NgForm, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 
-
-/** BtsNumero doit être un nombe au format chaine de caractère */
-
 export const passwordValidator: ValidatorFn = (form: FormGroup): ValidationErrors | null => {
     const password = form.get('password');
     const confirmPassword = form.get('confirmPassword');
@@ -18,6 +15,13 @@ export const passwordValidator: ValidatorFn = (form: FormGroup): ValidationError
  */
 export class ConfirmValidParentMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+
+    if ( control.parent.invalid && control.touched) {
+          console.log('ConfirmValidParentMatcher true');
+      } else {
+          console.log('ConfirmValidParentMatcher false');
+      }
+
     return control.parent.invalid && control.touched;
   }
 }

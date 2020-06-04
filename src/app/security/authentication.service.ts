@@ -18,7 +18,8 @@ interface AuthenticationResponse {
 export class AuthenticationService {
   redirectUrl = '/';
 
-  private authenticationUrl = 'http://localhost:8081/api/auth';
+  // private authenticationUrl = 'http://localhost:8081/api/auth';
+  private authenticationUrl = 'http://192.168.100.7:8081/api/auth';
 
   constructor(private httpClient: HttpClient) { }
 

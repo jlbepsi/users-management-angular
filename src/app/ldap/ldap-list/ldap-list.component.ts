@@ -4,16 +4,18 @@ import {UserLdap} from '../../model/userldap';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
-import {UsersService} from '../../service/users-service.service';
 import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {CLASSES} from '../../model/classes';
-import {DialogUsersNAComponent} from '../import/import.component';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {FormBuilder} from '@angular/forms';
+import {ExportToCsv} from 'export-to-csv';
+
+import {UsersService} from '../../service/users-service.service';
+import {CLASSES} from '../../model/classes';
 import {UserReport} from '../../model/UserReport';
 import {ConfirmValidParentMatcher, passwordValidator} from '../ldap-detail/passwords-validator.directive';
-import {validBtsNumero} from '../ldap-detail/btsnumero-validator.directive';
-import {FormBuilder} from '@angular/forms';
+import {UserImport} from '../../model/UserImport';
+import {UserExport} from '../../model/UserExport';
 
 @Component({
   selector: 'app-ldap-list',
@@ -56,11 +58,11 @@ export class LdapListComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
-    this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     this.dataSource.filterPredicate = (data: UserLdap, filter: string) => this.filterPredicate(data, filter);
 
-    // this.getUsers();
+    this.getUsers();
   }
 
   ngAfterViewInit() {
@@ -199,7 +201,7 @@ export class LdapListComponent implements OnInit, AfterViewInit {
   }
 
   deleteAll() {
-    const list: string[] = this._getUsersSelected();
+    const list: string[] = this._getUsersLoginSelected();
 
     if (list.length > 0) {
       // si il y a des utilisateurs
@@ -226,7 +228,7 @@ export class LdapListComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
         // Obtention des utilsateurss sélectionnés
-        const list: string[] = this._getUsersSelected();
+        const list: string[] = this._getUsersLoginSelected();
         if (list.length > 0) {
           // si il y a des utilisateurs
           this.usersService.changeUsersBts(list, result.bts, result.parcours).subscribe(
@@ -271,9 +273,35 @@ export class LdapListComponent implements OnInit, AfterViewInit {
     this.getUsers();
   }
 
+  exportCSV() {
+    // Librairie export-to-csv
+    //  https://www.npmjs.com/package/export-to-csv
+    const options = {
+      filename: this.classeSelected + '_export',
+      fieldSeparator: ',',
+      quoteStrings: '',
+      decimalSeparator: '.',
+      showLabels: true,
+      showTitle: false,
+      useTextFile: false,
+      useBom: true,
+      useKeysAsHeaders: true,
+      // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
+    };
+
+    const list: UserExport[] = [];
+    this.selection.selected.forEach( user =>
+        list.push(new UserExport(user.login, user.nom, user.prenom, user.classe, user.mail,
+                                 user.bts, user.btsParcours, user.btsNumero))
+    );
+
+    const csvExporter = new ExportToCsv(options);
+    csvExporter.generateCsv(list);
+  }
+
   /** PRIVATE METHODS */
 
-  private _getUsersSelected(): string[] {
+  private _getUsersLoginSelected(): string[] {
     const list: string[] = [];
     this.selection.selected.forEach( user =>
         list.push(user.login)
@@ -303,7 +331,7 @@ export class LdapListComponent implements OnInit, AfterViewInit {
   }
 
   private _activateList(active: boolean) {
-    const list: string[] = this._getUsersSelected();
+    const list: string[] = this._getUsersLoginSelected();
 
     if (list.length > 0) {
       // si il y a des utilisateurs

@@ -81,12 +81,14 @@
             <input type="password" matInput
                    [placeholder]="passwordPlaceHolder"
                    id='password' formControlName='password'
-                   [errorStateMatcher]="confirmValidParentMatcher">
+                   [errorStateMatcher]="confirmValidParentMatcher"
+            />
           </mat-form-field>
         </td>
         <td>
           <mat-form-field class="user-full-width">
-            <input type="password" matInput class="form-control" placeholder="Vérification du mot de passe"
+            <input type="password" matInput
+                   placeholder="Vérification du mot de passe"
                    id="confirmPassword" formControlName="confirmPassword"
                    [errorStateMatcher]="confirmValidParentMatcher"
             />
@@ -122,7 +124,7 @@
         </td>
         <td>
           <mat-form-field class="user-full-width">
-            <input matInput class="form-control" placeholder="Numéro inscription BTS"
+            <input matInput class="form-control" placeholder="Numéro inscription BTS (10 chiffres)"
                    id="btsNumero" formControlName="btsNumero"
             />
             <mat-error *ngIf="hasError('btsNumero', 'validBtsNumero')">Le numéro doit être composé de 10 chiffres</mat-error>

@@ -76,7 +76,8 @@ export abstract class LdapDetailComponent {
 
   isFormValid(): boolean {
     return this.userForm.valid
-      &&  (this.formGetValue('bts') === false || (this.formGetValue('btsParcours') !== '' && this.formGetValue('btsNumero') !== ''));
+        &&  (!this.addForm || this.formGetValue('passwordGroup.password') !== '')
+        &&  (this.formGetValue('bts') === false || (this.formGetValue('btsParcours') !== '' && this.formGetValue('btsNumero') !== ''));
   }
 
   abstract validateForm(values: any[]): void;

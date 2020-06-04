@@ -6,6 +6,12 @@ import {AuthenticationService} from '../security/authentication.service';
 
 export default class BaseApi<T> {
 
+    private static getHttpOptions(): HttpHeaders {
+        return new HttpHeaders({
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + AuthenticationService.getToken()
+            });
+    }
 
     constructor(private httpClient: HttpClient, private domain: string) {
     }
@@ -14,53 +20,59 @@ export default class BaseApi<T> {
         return this.httpClient.get<T[]>(this.domain);
     }
 
-    /*apiGetAllWithOption(urlOption: string): Observable<T[]> {
-        return this.httpClient.get<T[]>(`${this.domain}/${urlOption}`);
-    }*/
-
-    apiGetAllWithOption(idOrUrl: string) {
-        return this.apiMethodWithData(idOrUrl, 'GET', null);
+    apiGetAllWithOption(idOrUrl: string): Observable<T[]> {
+        return this.httpClient.get<T[]>(
+            this.getUrl(idOrUrl), {
+                headers: BaseApi.getHttpOptions()
+            }
+        );
     }
 
     apiGetId(id: string): Observable<T> {
         return this.httpClient.get<T>(`${this.domain}/${id}`);
     }
 
-    apiPost(data: any) {
-        return this.apiMethodWithData(null, 'POST', data);
+    apiPost(data: any): Observable<T> {
+        return this.apiPostWithURL(null, data);
+        // return this.apiMethodWithData(null, 'POST', data);
     }
-    apiPostWithURL(idOrUrl: string, data: any) {
-        return this.apiMethodWithData(idOrUrl, 'POST', data);
+    apiPostWithURL(idOrUrl: string, data: any): Observable<T> {
+        return this.httpClient.post<T>(
+            this.getUrl(idOrUrl), data, {
+                headers: BaseApi.getHttpOptions()
+            }
+        );
     }
-    apiPut(idOrUrl: string, data: any) {
-        return this.apiMethodWithData(idOrUrl, 'PUT', data);
+    apiPut(idOrUrl: string, data: any): Observable<T> {
+        return this.httpClient.put<T>(
+            this.getUrl(idOrUrl), data, {
+                headers: BaseApi.getHttpOptions()
+            }
+        );
+        // return this.apiMethodWithData(idOrUrl, 'PUT', data);
     }
-    apiDelete(id: string) {
-        return this.apiMethodWithData(id, 'DELETE', null);
+    apiDelete(id: string): Observable<T> {
+        return this.httpClient.delete<T>(
+            this.getUrl(id), {
+                headers: BaseApi.getHttpOptions()
+            }
+        );
+        // return this.apiMethodWithData(id, 'DELETE', null);
     }
     apiDeleteWithURL(idOrUrl: string, data: any) {
         return this.apiMethodWithData(idOrUrl, 'DELETE', data);
     }
 
     private apiMethodWithData(idOrUrl: string, method: string, data: any) {
-        console.log('apiMethodWithData:');
-
-        const url = this.domain + (idOrUrl == null ? '' : '/' + idOrUrl);
-        console.log(url);
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + AuthenticationService.getToken()
-            })
-        };
         data = (data == null ? '' : JSON.stringify(data));
-        console.log(data);
-
-        return this.httpClient.request<T>(method, url, {
+        return this.httpClient.request<T>(method,
+            this.getUrl(idOrUrl), {
             body: data,
-            headers: httpOptions.headers
-        })/*.pipe(
-            tap(res => BaseApi.log(res.toString()))
-        )*/;
+            headers: BaseApi.getHttpOptions()
+        });
+    }
+
+    private getUrl(idOrUrl: string): string {
+        return this.domain + (idOrUrl == null ? '' : '/' + idOrUrl);
     }
 }

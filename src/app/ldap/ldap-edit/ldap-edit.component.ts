@@ -22,27 +22,8 @@ export class LdapEditComponent extends LdapDetailComponent implements OnInit {
 
   ngOnInit(): void {
     super.onInit();
-
+  // Obtention de l'utilisateur
     this.getUser();
-  }
-
-
-  private getUser(): void {
-    const login = this.route.snapshot.paramMap.get('id');
-
-    this.processLoadRunning = true;
-    this.usersService.getUser(login).subscribe(
-      user => {
-        this.user = user;
-        this.copyUserToFormControl();
-        this.processLoadRunning = false;
-      },
-      error => {
-        this.processLoadRunning = false;
-        this.errorMessage = 'L\'utilisateur n\'existe pas !';
-        this.snackBar.open('Utilisateur non trouvé !', 'X');
-      }
-    );
   }
 
   validateForm(values: any[]): void {
@@ -71,5 +52,23 @@ export class LdapEditComponent extends LdapDetailComponent implements OnInit {
 
         this.openSnackbar("error", "Une erreur est survenue dans la modification !");
       });*/
+  }
+
+  private getUser(): void {
+    const login = this.route.snapshot.paramMap.get('id');
+
+    this.processLoadRunning = true;
+    this.usersService.getUser(login).subscribe(
+        user => {
+          this.user = user;
+          this.copyUserToFormControl();
+          this.processLoadRunning = false;
+        },
+        error => {
+          this.processLoadRunning = false;
+          this.errorMessage = 'L\'utilisateur n\'existe pas !';
+          this.snackBar.open('Utilisateur non trouvé !', 'X');
+        }
+    );
   }
 }

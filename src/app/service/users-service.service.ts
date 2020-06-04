@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import {Observable, of, throwError} from 'rxjs';
+import {Observable} from 'rxjs';
 
 import {UserLdap} from '../model/userldap';
-import {ClassesInfo} from '../model/ClasseInfo';
 import {UserImport} from '../model/UserImport';
 import {HttpClient} from '@angular/common/http';
 import BaseApi from './base-api';
@@ -12,7 +11,8 @@ import BaseApi from './base-api';
 })
 export class UsersService extends BaseApi<UserLdap> {
 
-  private static usersUrl = 'http://localhost:8081/api/users';
+  // private static usersUrl = 'http://localhost:8081/api/users';
+  private static usersUrl = 'http://192.168.100.7:8081/api/users';
 
   constructor(httpClient: HttpClient) {
     super(httpClient, UsersService.usersUrl);

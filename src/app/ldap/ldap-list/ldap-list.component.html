@@ -3,7 +3,7 @@
 
     <button mat-raised-button color="primary"
             (click)="addUser()">
-      Ajouter un utilsateur
+      Ajouter un utilisateur
     </button> <br /><br />
 
     <div *ngIf="errorMessage.length>0">
@@ -32,15 +32,18 @@
     </div>
 
     <div class="toolbar">
-      <div *ngIf="! selection.hasValue()" >
+      <div *ngIf="selection.hasValue()" >
 
         <button mat-icon-button matTooltip="Recharger" color="primary"
                 (click)="reload()">
           <mat-icon aria-label="Recharger">refresh</mat-icon>
         </button>
 
-      </div>
-      <div *ngIf="selection.hasValue()" >
+        <button mat-icon-button matTooltip="Exporter au format CSV" color="primary"
+                (click)="exportCSV()">
+          <mat-icon aria-label="Exporter au format CSV" fontSet="fas" fontIcon="fa-file-csv fa-lg"></mat-icon>
+        </button>
+
         <button mat-icon-button matTooltip="Modifier l'option BTS" color="primary"
                 (click)="modifyBTSOptionAll()">
           <mat-icon aria-label="">school</mat-icon>
