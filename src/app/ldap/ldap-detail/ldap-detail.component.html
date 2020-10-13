@@ -49,6 +49,19 @@
             <mat-error>Le prénom est requis</mat-error>
           </mat-form-field>
         </td>
+        <td>
+          <mat-form-field class="user-full-width">
+            <mat-label>Genre</mat-label>
+
+            <mat-select
+                    id="genre" formControlName="genre"
+            >
+              <mat-option value="2">NA</mat-option>
+              <mat-option value="1">Féminin</mat-option>
+              <mat-option value="0">Masculin</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
       </tr>
     </table>
 

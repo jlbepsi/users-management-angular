@@ -59,12 +59,12 @@ export class UsersImportation {
     const userInfo: string[] = line.split(',');
 
     return new UserImport(
-      userInfo[UsersImportation.map.get('login')],
-      userInfo[UsersImportation.map.get('nom')],
+      userInfo[UsersImportation.map.get('login')].toLowerCase(),
+      userInfo[UsersImportation.map.get('nom')].toUpperCase(),
       userInfo[UsersImportation.map.get('prenom')],
       userInfo[UsersImportation.map.get('mdp')],
       '',
-      userInfo[UsersImportation.map.get('mail')]
+      userInfo[UsersImportation.map.get('mail')].toLowerCase()
     );
   }
 }

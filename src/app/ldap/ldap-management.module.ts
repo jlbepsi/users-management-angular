@@ -14,6 +14,9 @@ import {AlertComponent} from './share/alert/alert.component';
 import {ClasseComponent} from './share/classe/classe.component';
 import {LdapComponent} from './ldap/ldap.component';
 import {NavbarComponent} from './navbar/navbar.component';
+import { OverlayLoadingDirective } from './share/overlay/overlay-loading.directive';
+import { LoaderComponent } from './share/loader/loader.component';
+import { InfoComponent } from './info/info.component';
 
 
 @NgModule({
@@ -30,6 +33,9 @@ import {NavbarComponent} from './navbar/navbar.component';
     LdapAddComponent,
     LdapEditComponent,
     AlertComponent,
+    OverlayLoadingDirective,
+    LoaderComponent,
+    InfoComponent,
   ],
   exports: [
     LdapComponent

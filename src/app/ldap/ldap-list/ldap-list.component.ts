@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
+import {AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {UserLdap} from '../../model/userldap';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatSort} from '@angular/material/sort';
@@ -16,13 +16,17 @@ import {UserReport} from '../../model/UserReport';
 import {ConfirmValidParentMatcher, passwordValidator} from '../ldap-detail/passwords-validator.directive';
 import {UserImport} from '../../model/UserImport';
 import {UserExport} from '../../model/UserExport';
+import {DynamicOverlay} from '../share/overlay/DynamicOverlay';
+import {LoaderComponent} from '../share/loader/loader.component';
+import {ComponentPortal} from '@angular/cdk/portal';
+import {Observable, Subject} from 'rxjs';
 
 @Component({
   selector: 'app-ldap-list',
   templateUrl: './ldap-list.component.html',
   styleUrls: ['./ldap-list.component.scss']
 })
-export class LdapListComponent implements OnInit, AfterViewInit {
+export class LdapListComponent implements OnInit {
 
   displayedColumns: string[] = ['select', 'active', 'classe', 'nomComplet', 'mail', 'bts', 'action'];
   dataSource = new MatTableDataSource<UserLdap>([]);
@@ -33,6 +37,9 @@ export class LdapListComponent implements OnInit, AfterViewInit {
   btsSelected: boolean;
   errorMessage = '';
 
+  private fetchingDataSource = new Subject<boolean>();
+  fetchingData$ = this.fetchingDataSource.asObservable();
+
   private snackTypeClass = {
     success: 'snackbarColorSuccess',
     danger: 'snackbarColorDanger',
@@ -41,7 +48,7 @@ export class LdapListComponent implements OnInit, AfterViewInit {
   };
 
   /********** MATERIAL **********/
-
+  @ViewChild(MatTable, { static: false, read: ElementRef }) table: ElementRef;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
@@ -62,30 +69,37 @@ export class LdapListComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
     this.dataSource.filterPredicate = (data: UserLdap, filter: string) => this.filterPredicate(data, filter);
 
-    this.getUsers();
-  }
-
-  ngAfterViewInit() {
-    /*console.log('Values on ngAfterViewInit():');
-    console.log('Mat Paginator:', this.paginator);*/
+    // this.getUsers();
   }
 
   /********** SERVICE **********/
 
   getUsers(): void {
-    this.usersService.getUsers().subscribe(
-      users => {
-        if (this.classeSelected.length === 0) {
-          this.dataSource.data = users;
-        } else {
-          this.dataSource.data = users.filter( user => user.classe === this.classeSelected );
-        }
+    this.fetchingDataSource.next(true);
 
-        if (this.btsSelected) {
-          this.dataSource.data = this.dataSource.data.filter( user => user.bts === true );
-        }
-      }
-    );
+    if (this.classeSelected.length === 0) {
+      this.usersService.getUsers().subscribe(
+          users => {
+            if (this.btsSelected) {
+              users = users.filter(user => user.bts === true);
+            }
+            this.dataSource.data = users;
+            this.fetchingDataSource.next(false);
+          }
+      );
+    } else {
+      this.usersService.getUsersOfClass(this.classeSelected).subscribe(
+          users => {
+            if (this.btsSelected) {
+              users = users.filter(user => user.bts === true);
+            }
+            this.dataSource.data = users;
+            this.fetchingDataSource.next(false);
+          }
+      );
+    }
+    // On vide la liste de sélection
+    this.selection.clear();
   }
 
   filterPredicate(data, filter) {
@@ -201,22 +215,24 @@ export class LdapListComponent implements OnInit, AfterViewInit {
   }
 
   deleteAll() {
-    const list: string[] = this._getUsersLoginSelected();
+    if (confirm('Supprimer les utilisateurs sélectionnés (Action irreversible !!) ?')) {
+      const list: string[] = this._getUsersLoginSelected();
 
-    if (list.length > 0) {
-      // si il y a des utilisateurs
-      this.usersService.deleteUsers(list).subscribe(
-          data => {
-            this._removeUsersFromList(list);
-            this.showSnakbar('Utilisateurs supprimé !', this.snackTypeClass.success);
-          },
-          error => {
-            this.errorMessage = 'Impossible de supprimer les utilisateurs';
-            this.showSnakbar('Suppression impossible !', this.snackTypeClass.danger);
-          }
-      );
-      // On vide la liste
-      this.selection.clear();
+      if (list.length > 0) {
+        // si il y a des utilisateurs
+        this.usersService.deleteUsers(list).subscribe(
+            data => {
+              this._removeUsersFromList(list);
+              this.showSnakbar('Utilisateurs supprimé !', this.snackTypeClass.success);
+            },
+            error => {
+              this.errorMessage = 'Impossible de supprimer les utilisateurs';
+              this.showSnakbar('Suppression impossible !', this.snackTypeClass.danger);
+            }
+        );
+        // On vide la liste
+        this.selection.clear();
+      }
     }
   }
 
@@ -318,7 +334,7 @@ export class LdapListComponent implements OnInit, AfterViewInit {
   }
 
   _removeUserFromList(login) {
-    this.dataSource.data.filter(user => user.login !== login);
+    this.dataSource.data = this.dataSource.data.filter(user => user.login !== login);
   }
 
   _updateActiveUser(login, active) {

@@ -4,10 +4,11 @@ export interface UserLdap {
   login: string;
   nom: string;
   prenom: string;
+  genre: number;
   nomComplet: string;
   motDePasse: string;
   classe: string;
-  groupe: string;
+  // groupe: string;
   mail: string;
   role: string;
   bts: boolean;

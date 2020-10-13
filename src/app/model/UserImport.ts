@@ -1,8 +1,8 @@
-export enum Status {
+/*export enum Status {
   Error = -1,
   Waiting,
   Success,
-}
+}*/
 
 export class UserImport {
 
@@ -10,7 +10,7 @@ export class UserImport {
               public classe: string, public mail: string) {
   }
 
-  public status: Status = Status.Waiting;
+  public status = 0;
   public role = 'ROLE_USER';
 
   get isPasswordValid() {

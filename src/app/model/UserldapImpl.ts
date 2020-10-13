@@ -7,7 +7,7 @@ export class UserldapImpl implements UserLdap {
   btsNumero: string;
   btsParcours: string;
   classe: string;
-  groupe: string;
+  genre: number;
   login: string;
   mail: string;
   motDePasse: string;

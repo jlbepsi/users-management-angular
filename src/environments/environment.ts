@@ -3,7 +3,13 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  authenticationApiURl: 'http://localhost:8080/api/auth',
+  usersApiURl: 'http://localhost:8080/api/users'
+
+  /*authenticationApiURl: 'https://users.ws.montpellier.epsi.fr/api/auth',
+  usersApiURl: 'https://users.ws.montpellier.epsi.fr/api/users'*/
+
 };
 
 /*

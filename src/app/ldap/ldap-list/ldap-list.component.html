@@ -69,6 +69,7 @@
     <table
       mat-table [dataSource]="dataSource"
       matSort matSortActive="classe" matSortDirection="asc"
+      [appOverlayLoading]="fetchingData$"
     >
 
       <!-- Checkbox Column -->

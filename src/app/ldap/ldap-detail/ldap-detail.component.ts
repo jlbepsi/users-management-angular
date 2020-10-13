@@ -7,6 +7,7 @@ import {validBtsNumero} from './btsnumero-validator.directive';
 import {ConfirmValidParentMatcher, passwordValidator} from './passwords-validator.directive';
 import {CLASSES} from '../../model/classes';
 import {UserldapImpl} from '../../model/UserldapImpl';
+import {strict} from 'assert';
 
 /*
 Il faut supprimer @Component
@@ -32,6 +33,7 @@ export abstract class LdapDetailComponent {
     login: [''],
     nom: [''],
     prenom: [''],
+    genre: [2],
     passwordGroup: this.fb.group({
       password: [''],
       confirmPassword: ['']
@@ -94,6 +96,7 @@ export abstract class LdapDetailComponent {
     this.userForm.get('login').setValue(this.user.login);
     this.userForm.get('nom').setValue(this.user.nom);
     this.userForm.get('prenom').setValue(this.user.prenom);
+    this.userForm.get('genre').setValue(this.user.genre);
     this.userForm.get('classe').setValue(this.user.classe);
     this.userForm.get('mail').setValue(this.user.mail);
     this.userForm.get('bts').setValue(this.user.bts);
@@ -103,18 +106,37 @@ export abstract class LdapDetailComponent {
   }
 
   protected getUserFromFormControl(): UserLdap {
+    const roleUser = (this.formGetValue('classe') === 'PROFS' ? 'ROLE_PROF' : 'ROLE_USER');
+    return {
+      login: this.userForm.get('login').value,
+      nom: this.userForm.get('nom').value,
+      prenom: this.userForm.get('prenom').value,
+      genre: this.userForm.get('genre').value,
+      nomComplet: this.userForm.get('nom').value + ' ' + this.userForm.get('prenom').value,
+      classe: this.userForm.get('classe').value,
+      mail: this.userForm.get('mail').value,
+      bts: this.userForm.get('bts').value,
+      btsParcours: this.userForm.get('btsParcours').value,
+      btsNumero: this.userForm.get('btsNumero').value,
+      active: true,
+      motDePasse: this.userForm.get('passwordGroup.password').value,
+      role: roleUser
+    };
+
+    /*
     const user: UserLdap = new UserldapImpl();
     user.login = this.userForm.get('login').value;
     user.motDePasse = this.userForm.get('passwordGroup.password').value;
     user.nom = this.userForm.get('nom').value;
     user.prenom = this.userForm.get('prenom').value;
+    user.genre = this.userForm.get('genre').value;
     user.classe = this.userForm.get('classe').value;
     user.mail = this.userForm.get('mail').value;
     user.bts = this.userForm.get('bts').value;
     user.btsParcours = this.userForm.get('btsParcours').value;
     user.btsNumero = this.userForm.get('btsNumero').value;
 
-    return user;
+    return user;*/
   }
 
   private formGetValue(name: string): any {
@@ -147,6 +169,8 @@ export abstract class LdapDetailComponent {
   private getMailDomain(): string {
     if (this.formGetValue('classe').startsWith('W')) {
       return 'ecoles-wis.fr';
+    } else if (this.formGetValue('classe') === 'PROFS') {
+      return 'reseau-cd.net';
     }
     return 'epsi.fr';
   }

@@ -5,6 +5,7 @@ import {UserLdap} from '../model/userldap';
 import {UserImport} from '../model/UserImport';
 import {HttpClient} from '@angular/common/http';
 import BaseApi from './base-api';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,18 +13,17 @@ import BaseApi from './base-api';
 export class UsersService extends BaseApi<UserLdap> {
 
   // private static usersUrl = 'http://localhost:8081/api/users';
-  private static usersUrl = 'http://192.168.100.7:8081/api/users';
 
   constructor(httpClient: HttpClient) {
-    super(httpClient, UsersService.usersUrl);
+    super(httpClient, environment.usersApiURl);
   }
 
   getUsers(): Observable<UserLdap[]> {
     return super.apiGetAll();
   }
 
-  getUsersOfClass(classe: string): Observable<object> {
-    return super.apiGetAllWithOption(classe);
+  getUsersOfClass(classe: string): Observable<UserLdap[]> {
+    return super.apiGetAllWithOption('classe/' +  classe);
   }
 
   getUser(login: string): Observable<UserLdap> {
@@ -67,6 +67,10 @@ export class UsersService extends BaseApi<UserLdap> {
 
   setUsersToNA(): Observable<object> {
     return super.apiPut('setuserstona', null);
+  }
+
+  setNAClassToUsers(): Observable<object> {
+    return super.apiPut('setclassnatousers', null);
   }
 
 

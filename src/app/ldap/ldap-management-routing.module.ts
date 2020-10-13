@@ -8,16 +8,8 @@ import {ImportComponent} from './import/import.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {LdapComponent} from './ldap/ldap.component';
 import {AuthGuard} from '../security/auth.guard';
+import {InfoComponent} from './info/info.component';
 
-
-/*const adminRoutes: Routes = [
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'ldap', component: LdapListComponent },
-  { path: 'ldap/add', component: LdapAddComponent },
-  { path: 'ldap/:id', component: LdapEditComponent },
-  { path: 'import', component: ImportComponent },
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-];*/
 
 const adminRoutes: Routes = [
   {
@@ -28,6 +20,7 @@ const adminRoutes: Routes = [
       {
         path: '',
         children: [
+          { path: 'info', component: InfoComponent },
           { path: 'dashboard', component: DashboardComponent },
           { path: 'import', component: ImportComponent },
           { path: 'list', component: LdapListComponent },

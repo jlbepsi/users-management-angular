@@ -9,7 +9,7 @@
     <mat-icon *ngIf="processUsersToNARunning">
       <mat-spinner diameter="16"></mat-spinner>
     </mat-icon>
-    Basculer tous les utilisateurs en NA
+    Basculer tous les utilisateurs (classe précédente NA) en classe NA
   </button>
   <br /><br />
 
@@ -46,6 +46,9 @@
             matTooltip="Importer tous les utilisateurs"
             [disabled]="cannotImport"
             (click)="doImport()">
+      <mat-icon *ngIf="processImportRunning">
+        <mat-spinner diameter="16"></mat-spinner>
+      </mat-icon>
       Importer
     </button>
   </div>

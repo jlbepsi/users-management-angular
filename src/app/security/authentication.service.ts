@@ -3,6 +3,7 @@ import {Observable, of} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import * as jwt_decode from 'jwt-decode';
 import {tap} from 'rxjs/operators';
+import {environment} from '../../environments/environment';
 
 
 interface AuthenticationResponse {
@@ -18,10 +19,11 @@ interface AuthenticationResponse {
 export class AuthenticationService {
   redirectUrl = '/';
 
-  // private authenticationUrl = 'http://localhost:8081/api/auth';
-  private authenticationUrl = 'http://192.168.100.7:8081/api/auth';
+  private authenticationUrl = '';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+    this.authenticationUrl = environment.authenticationApiURl;
+  }
 
   static isLoggedIn() {
     // Checks if there is a saved token and it's still valid
